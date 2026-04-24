@@ -1,49 +1,81 @@
-# Python Server
+# Anythink Market — Task API
 
-This project contains a FastAPI server implemented in Python. It provides two routes for managing a task list.
-
-It also includes a minimal Express server in `js-server` that listens on port `8001` with `nodemon` configured under `yarn start` for automatic reloads during development.
+This project exposes a task-list API. The routes have been migrated from a Python/FastAPI implementation to a Node.js/Express server. Both services are still available and run in parallel via Docker Compose while the migration is in progress; they implement identical route behavior.
 
 ## Project Structure
 
-The project has the following files and directories:
+- `js-server/src/index.js`: Express server. Implements all API routes. Listens on port `8001`. Uses `nodemon` via `yarn start` for automatic code reloading during development.
+- `js-server/package.json`: Node.js dependencies and scripts.
+- `js-server/Dockerfile`: Builds and runs the Node.js server image.
 
-- `python-server/src/main.py`: This file contains the implementation of the FastAPI server with two routes. It handles adding a task to a list and retrieving the list.
+- `python-server/src/main.py`: Original FastAPI implementation. Still running on port `8000` during the transition period.
+- `python-server/requirements.txt`: Python dependencies.
+- `python-server/Dockerfile`: Builds and runs the Python server image.
 
-- `python-server/src/__init__.py`: This file is an empty file that marks the `src` directory as a Python package.
-
-- `python-server/requirements.txt`: This file lists the dependencies required for the FastAPI server and other dependencies.
-
-- `python-server/Dockerfile`: This file is used to build a Docker image for the FastAPI server. It specifies the base image, copies the source code into the image, installs the dependencies, and sets the command to run the server.
-
-- `js-server/src/index.js`: This file contains a minimal Express server with no endpoints. It listens on port `8001`.
-
-- `js-server/package.json`: This file defines the Node.js dependencies and the `yarn start` script, which runs the server through `nodemon`.
-
-- `js-server/Dockerfile`: This file builds the JavaScript server image and starts it with `yarn start`.
-
-- `docker-compose.yml`: This file is used to define and run multi-container Docker applications. It specifies the services to run, their configurations, and any dependencies between them.
+- `docker-compose.yml`: Defines and runs both services together.
 
 ## Getting Started
 
-To run the FastAPI server using Docker, follow these steps:
+Build and start both servers:
 
-- Build and start the Docker containers by running the following command:
+```shell
+docker compose up --build
+```
 
-  ```shell
-  docker compose up
-  ```
+Or run the Node.js server locally without Docker:
 
-  This command will build the Docker image for the FastAPI server and start the containers defined in the `docker-compose.yml` file.
-
-- The FastAPI server should now be running. You can access at port `8000`.
-
-- The Express server can be started with `cd js-server && yarn install && yarn start`, or through Docker Compose at port `8001`.
+```shell
+cd js-server && yarn install && yarn start
+```
 
 ## API Routes
 
-The FastAPI server provides the following API routes:
+Both servers implement the same routes. Going forward, the Node.js server (`port 8001`) is the primary target.
 
-- `POST /tasks`: Adds a task to the task list. The request body should contain the task details.
+### `GET /`
 
-- `GET /tasks`: Retrieves the task list.
+Returns a greeting string.
+
+**Response**
+```json
+"Hello World"
+```
+
+---
+
+### `GET /tasks`
+
+Returns the full task list.
+
+**Response**
+```json
+{
+  "tasks": ["Write a diary entry from the future", "..."]
+}
+```
+
+---
+
+### `POST /tasks`
+
+Adds a new task to the list.
+
+**Request body**
+```json
+{ "text": "Your task description" }
+```
+
+**Response**
+```json
+{ "message": "Task added successfully" }
+```
+
+## Migration Notes
+
+The routes were originally implemented in Python using FastAPI (`python-server/`). They have been ported to Node.js/Express (`js-server/`) with identical request/response behavior:
+
+| Route | Python (port 8000) | Node.js (port 8001) |
+|---|---|---|
+| `GET /` | ✅ | ✅ |
+| `GET /tasks` | ✅ | ✅ |
+| `POST /tasks` | ✅ | ✅ |
