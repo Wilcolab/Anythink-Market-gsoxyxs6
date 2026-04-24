@@ -7,3 +7,14 @@ services:
       - 8000:8000
     volumes:
       - ./python-server/src:/app/src
+    command: uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+  js-server:
+    build:
+      context: ./js-server
+      dockerfile: Dockerfile
+    ports:
+      - 8001:8001
+    volumes:
+      - ./js-server:/app
+      - /app/node_modules
+    command: yarn start

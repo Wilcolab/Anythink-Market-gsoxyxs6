@@ -2,6 +2,8 @@
 
 This project contains a FastAPI server implemented in Python. It provides two routes for managing a task list.
 
+It also includes a minimal Express server in `js-server` that listens on port `8001` with `nodemon` configured under `yarn start` for automatic reloads during development.
+
 ## Project Structure
 
 The project has the following files and directories:
@@ -13,6 +15,12 @@ The project has the following files and directories:
 - `python-server/requirements.txt`: This file lists the dependencies required for the FastAPI server and other dependencies.
 
 - `python-server/Dockerfile`: This file is used to build a Docker image for the FastAPI server. It specifies the base image, copies the source code into the image, installs the dependencies, and sets the command to run the server.
+
+- `js-server/src/index.js`: This file contains a minimal Express server with no endpoints. It listens on port `8001`.
+
+- `js-server/package.json`: This file defines the Node.js dependencies and the `yarn start` script, which runs the server through `nodemon`.
+
+- `js-server/Dockerfile`: This file builds the JavaScript server image and starts it with `yarn start`.
 
 - `docker-compose.yml`: This file is used to define and run multi-container Docker applications. It specifies the services to run, their configurations, and any dependencies between them.
 
@@ -29,6 +37,8 @@ To run the FastAPI server using Docker, follow these steps:
   This command will build the Docker image for the FastAPI server and start the containers defined in the `docker-compose.yml` file.
 
 - The FastAPI server should now be running. You can access at port `8000`.
+
+- The Express server can be started with `cd js-server && yarn install && yarn start`, or through Docker Compose at port `8001`.
 
 ## API Routes
 
